@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container-fluid">
+        <div style="font-weight: bold" class="col-sm-10 mb-3 mt-1" id="user">
+        </div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="text" class="form-control" id="username" placeholder="Enter username">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="text" class="form-control" id="pwd" placeholder="Enter password">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="text" class="form-control" id="email" placeholder="Enter email">
+                </div>
+            </div>
+        </form>
+        <div class="row-fluid">
+            <button type="button" class="btn btn-primary ml-3 mt-2 float-left" id="submit">
+                Submit
+            </button>
+            <button type="button" class="btn btn-danger mr-3 mt-2 float-right" id="delete">
+                Delete
+            </button>
+        </div><br><br>
+        <a href="index.html" class="text-primary mx-3 mt-2 row float-left">
+            View all users
+        </a>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <script>
+        var getUrlParameter = function getUrlParameter(sParam) {
+            var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+                sURLVariables = sPageURL.split('&'),
+                sParameterName,
+                i;
+
+            for (i = 0; i < sURLVariables.length; i++) {
+                sParameterName = sURLVariables[i].split('=');
+
+                if (sParameterName[0] === sParam) {
+                    return sParameterName[1] === undefined ? true : sParameterName[1];
+                }
+            }
+        };
+
+        $.ajax({
+            url: "/api/get?id=" + getUrlParameter("id"),
+            type: "GET",
+            dataType: "json",
+            success: function(result){
+                $("#user").append("Editing " + result.data.username);
+                $("#username").attr("value", result.data.username);
+                $("#pwd").attr("value", result.data.password);
+                $("#email").attr("value", result.data.email);
+            }
+        });
+
+        $("#submit").click(function () {
+            var un = $("#username").val();
+            var pw = $("#pwd").val();
+            var em = $("#email").val();
+
+            $.ajax({
+                url: "/api/get?id=" + getUrlParameter("id"),
+                type: "GET",
+                dataType: "json",
+                success: function(result){
+                    if(un == ""){
+                        un = result.data.username;
+                    }
+                    if(pw == ""){
+                        pw = result.data.password;
+                    }
+                    if(em == ""){
+                        em = result.data.email;
+                    }
+                }
+            });
+
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: "/api/edit",
+                type: "POST",
+                data: JSON.stringify({
+                    id: getUrlParameter("id"),
+                    username: un,
+                    password: pw,
+                    email: em,
+                }),
+                success: function(result){
+                    window.location.replace("/index.html");
+                }
+            })
+        });
+
+        $("#delete").click(function () {
+            $.ajax({
+                url: "/api/delete?id=" + getUrlParameter("id"),
+                type: "GET",
+                dataType: "json",
+                success: function(result){
+                    window.location.replace("/index.html");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

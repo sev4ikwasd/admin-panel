@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container-fluid">
+        <table class="table table-striped px-3">
+            <thead>
+            <tr>
+                <th style="width: 5%">Id</th>
+                <th style="width: 15%">Username</th>
+                <th style="width: 55%">Password</th>
+                <th style="width: 15%">Email</th>
+                <th style="width: 5%">Edit</th>
+            </tr>
+            </thead>
+            <tbody id="table_content">
+            </tbody>
+        </table>
+        <a href="create.html" class="text-primary px-3">
+            Create new user
+        </a>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <script>
+        $.ajax({
+            url: "/api/getall",
+            type: "GET",
+            dataType: "json",
+            success: function(result){
+                for(var i = 0; i < result.data.length; i++){
+                    $("#table_content").append("<tr>" + "<td>" + result.data[i].id + "</td>" + "<td>" + result.data[i].username + "</td>" + "<td>" + result.data[i].password + "</td>" + "<td>" + result.data[i].email + "</td>" + "<td>" + "<a href=\"edit.html?id=" + result.data[i].id + "\">Edit</a>" + "</td>" + "</tr>");
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
